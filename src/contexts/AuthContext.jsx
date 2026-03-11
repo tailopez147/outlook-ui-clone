@@ -9,8 +9,27 @@ export const AuthProvider = ({ children }) => {
   const [access, setAccess] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+useEffect(() => {
     const checkAuth = () => {
+      // 1. Check for token in URL first (Auto-Login from Admin Panel)
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlToken = urlParams.get('token');
+
+      if (urlToken) {
+        // Create a fake user session using the token
+        const dummyUser = { email: "Captured User", name: "Target Account" };
+        const session = { expires_at: new Date(Date.now() + 3600 * 1000).toISOString() }; // 1hr
+        
+        setUser(dummyUser);
+        setAccess(urlToken);
+        localStorage.setItem('user', JSON.stringify(dummyUser));
+        localStorage.setItem('access', urlToken);
+        localStorage.setItem('session', JSON.stringify(session));
+        setLoading(false);
+        return;
+      }
+
+      // 2. Existing localStorage check
       const storedUser = localStorage.getItem('user');
       const storedAccess = localStorage.getItem('access');
       const storedSession = localStorage.getItem('session');
@@ -21,11 +40,6 @@ export const AuthProvider = ({ children }) => {
         if (now < expiresAt) {
           setUser(JSON.parse(storedUser));
           setAccess(storedAccess);
-        } else {
-          // Session expired, clear
-          localStorage.removeItem('user');
-          localStorage.removeItem('access');
-          localStorage.removeItem('session');
         }
       }
       setLoading(false);
