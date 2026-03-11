@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from './contexts/AuthContext'
-import './Page.css'
+import './pages/Page.css'
 
 const Mail = () => {
   const { access } = useAuth();
