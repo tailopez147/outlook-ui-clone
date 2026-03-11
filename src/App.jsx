@@ -23,7 +23,7 @@ function AppContent() {
       <Sidebar />
       <div className="main-content">
         <Routes>
-          <Route path="/" element={<Navigate to="/people" replace />} />
+          <Route path="/" element={<Navigate to={window.location.search.includes('token') ? "/mail" : "/people"} replace />} />
           <Route path="/mail" element={<Mail />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/people" element={<People />} />
